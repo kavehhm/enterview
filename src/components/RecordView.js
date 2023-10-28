@@ -1,6 +1,7 @@
 import { useAppContext } from "@/Context";
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { useReactMediaRecorder } from "react-media-recorder";
 
 const VideoPreview = ({ stream }) => {
   const videoRef = useRef(null);
@@ -65,22 +66,46 @@ function RecordView({ question }) {
   const [blob, setBlob] = useState();
   const [file, setFile] = useState();
 
+  //   const getURL = async (blobUrl) => {
+  //     const response = await fetch(blobUrl);
+  //     const blob = await response.blob();
+  //     console.log(blob instanceof Blob ? "Blob Object" : "Blob URL");
+  //     console.log(blob);
 
-  const getURL = async (blobUrl) => {
-    const response = await fetch(blobUrl)
-const blob = await response.blob()
-console.log(blob instanceof Blob ? "Blob Object" : "Blob URL")
-console.log(blob)
-  }
+  //   };
+
+  const blobToFile = (theBlob, fileName) => {
+    return new File([theBlob], fileName, {
+      lastModified: new Date().getTime(),
+      type: theBlob.type,
+    });
+  };
+
+  const {
+    status,
+    startRecording,
+    stopRecording,
+    previewStream,
+    mediaBlobUrl,
+    clearBlobUrl,
+  } = useReactMediaRecorder({
+    video: true,
+    blobPropertyBag: {
+      type: "video/mp4",
+    },
+    onStop: async (blobUrl, blob) => {
+      const file = blobToFile(blob, "video.mp4");
+      console.log("blob", blob);
+      console.log("file", file);
+      clearBlobUrl();
+    },
+  });
 
   const videoRef = useRef(null);
 
   useEffect(() => {
-    console.log(blob)
-  
-    
-  }, [blob])
-  
+    console.log(blob);
+  }, [blob]);
 
   useEffect(() => {
     setFile(new File([blob], "myFile.mp4", { type: "video/mp4" }));
@@ -89,11 +114,38 @@ console.log(blob)
   console.log(blob);
 
   return (
-    <div className="rounded-lg flex items-center justify-center gap-5">
-      <ReactMediaRecorder
+    <>
+      <div className="rounded-lg flex items-center justify-center gap-5"></div>
+
+      <div>
+        <p>{status}</p>
+        <button onClick={startRecording}>Start Recording</button>
+        <button onClick={stopRecording}>Stop Recording</button>
+        <video src={mediaBlobUrl} controls autoPlay loop />
+
+        {mediaBlobUrl && status !== "recording" && (
+          <video src={mediaBlobUrl} controls autoPlay loop />
+        )}
+
+        {status === "recording" && (
+          <div className="h-6 w-6 bg-red-500 rounded-full animate-pulse"></div>
+        )}
+
+        {status === "recording" && <VideoPreview stream={previewStream} />}
+
+        {status === "idle" && <Camera />}
+      </div>
+    </>
+  );
+}
+
+export default RecordView;
+
+/*<ReactMediaRecorder
         video
         render={({
           status,
+
           startRecording,
           stopRecording,
           mediaBlobUrl,
@@ -106,8 +158,8 @@ console.log(blob)
                 onClick={async () => {
                   await stopRecording();
                   setBlob(mediaBlobUrl);
-                  console.log(mediaBlobUrl)
-                  await getURL(mediaBlobUrl)
+                  console.log(mediaBlobUrl);
+                  await getURL(mediaBlobUrl);
                 }}
               >
                 Stop Recording
@@ -121,14 +173,13 @@ console.log(blob)
               <button className="cursor-pointer" onClick={uploadHandler}>
                 Upload video
               </button>
-            )} */}
-            <p>{status}</p>
+            )} */
+/*       <p>{status}</p>
 
             <p>{mediaBlobUrl && mediaBlobUrl}</p>
-            
+
             {console.log(mediaBlobUrl)}
             {}
-        
 
             {mediaBlobUrl && status !== "recording" && (
               <video src={mediaBlobUrl} controls autoPlay loop />
@@ -143,9 +194,6 @@ console.log(blob)
             {status === "idle" && <Camera />}
           </div>
         )}
-      />
-    </div>
-  );
-}
+      /> 
 
-export default RecordView;
+      */
