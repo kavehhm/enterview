@@ -3,6 +3,8 @@ import "@/styles/globals.css";
 import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }) {
+
+  
   return (
     <AppProvider>
       <div className="p-10">
@@ -11,6 +13,7 @@ export default function App({ Component, pageProps }) {
           enter
           <span className="text-blue-600">view</span>
         </p>
+
         <Component {...pageProps} />
       </div>
     </AppProvider>

@@ -10,6 +10,7 @@ export function AppProvider({ children }) {
   const [step, setStep] = useState(1);
   const [videos, setVideos] = useState([])
   const [questions, setQuestions] = useState(["placeholder1", "placeholder2", "placeholder3"])
+  const [loading, setLoading] = useState(false)
 
   // Define functions that modify globalState here
 
@@ -22,7 +23,9 @@ export function AppProvider({ children }) {
     videos,
     setVideos,
     questions,
-    setQuestions
+    setQuestions,
+    loading,
+    setLoading
 
 
     // Add your functions here

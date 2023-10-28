@@ -1,8 +1,9 @@
-import { useAppContext } from "@/Context";
+import { AppProvider, useAppContext } from "@/Context";
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useReactMediaRecorder } from "react-media-recorder";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const VideoPreview = ({ stream }) => {
   const videoRef = useRef(null);
@@ -66,14 +67,9 @@ function RecordView({ question }) {
 
   const [blob, setBlob] = useState();
   const [fileMp4, setFile] = useState();
+  const {loading, setLoading} = useAppContext()
 
-  //   const getURL = async (blobUrl) => {
-  //     const response = await fetch(blobUrl);
-  //     const blob = await response.blob();
-  //     console.log(blob instanceof Blob ? "Blob Object" : "Blob URL");
-  //     console.log(blob);
 
-  //   };
 
   const blobToFile = (theBlob, fileName) => {
     return new File([theBlob], fileName, {
@@ -83,6 +79,9 @@ function RecordView({ question }) {
   };
 
   const getJobId=()=>{
+
+    setLoading(true)
+
 
     const options = {
       method: 'POST',
@@ -97,9 +96,13 @@ function RecordView({ question }) {
     axios
       .request(options)
       .then(function (response) {
+        toast.success("We got your data");
+        setLoading(false)
         console.log(response.data);
       })
       .catch(function (error) {
+        toast.error("We did not get your data");
+        setLoading(false)
         console.error(error);
       });
   }
@@ -127,16 +130,6 @@ function RecordView({ question }) {
 
   const videoRef = useRef(null);
 
-  // useEffect(() => {
-  //   console.log(blob);
-  // }, [blob]);
-
-  // useEffect(() => {
-    
-  //   setFile(new File([blob], "myFile.mp4", { type: "video/mp4" }));
-  // }, [blob]);
-
-  // console.log(blob);
 
   return (
     <>
@@ -167,59 +160,3 @@ function RecordView({ question }) {
 
 export default RecordView;
 
-/*<ReactMediaRecorder
-        video
-        render={({
-          status,
-
-          startRecording,
-          stopRecording,
-          mediaBlobUrl,
-          previewStream,
-        }) => (
-          <div>
-            {status === "recording" ? (
-              <button
-                className="cursor-pointer"
-                onClick={async () => {
-                  await stopRecording();
-                  setBlob(mediaBlobUrl);
-                  console.log(mediaBlobUrl);
-                  await getURL(mediaBlobUrl);
-                }}
-              >
-                Stop Recording
-              </button>
-            ) : (
-              <button className="cursor-pointer" onClick={startRecording}>
-                Start Recording
-              </button>
-            )}
-            {/* {mediaBlobUrl && (
-              <button className="cursor-pointer" onClick={uploadHandler}>
-                Upload video
-              </button>
-            )} */
-/*       <p>{status}</p>
-
-            <p>{mediaBlobUrl && mediaBlobUrl}</p>
-
-            {console.log(mediaBlobUrl)}
-            {}
-
-            {mediaBlobUrl && status !== "recording" && (
-              <video src={mediaBlobUrl} controls autoPlay loop />
-            )}
-
-            {status === "recording" && (
-              <div className="h-6 w-6 bg-red-500 rounded-full animate-pulse"></div>
-            )}
-
-            {status === "recording" && <VideoPreview stream={previewStream} />}
-
-            {status === "idle" && <Camera />}
-          </div>
-        )}
-      /> 
-
-      */
