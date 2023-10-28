@@ -65,13 +65,28 @@ function RecordView({ question }) {
   const [blob, setBlob] = useState();
   const [file, setFile] = useState();
 
+
+  const getURL = async (blobUrl) => {
+    const response = await fetch(blobUrl)
+const blob = await response.blob()
+console.log(blob instanceof Blob ? "Blob Object" : "Blob URL")
+console.log(blob)
+  }
+
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    console.log(blob)
+  
+    
+  }, [blob])
+  
 
   useEffect(() => {
     setFile(new File([blob], "myFile.mp4", { type: "video/mp4" }));
   }, [blob]);
 
-  console.log(file);
+  console.log(blob);
 
   return (
     <div className="rounded-lg flex items-center justify-center gap-5">
@@ -88,9 +103,11 @@ function RecordView({ question }) {
             {status === "recording" ? (
               <button
                 className="cursor-pointer"
-                onClick={() => {
-                  stopRecording();
+                onClick={async () => {
+                  await stopRecording();
                   setBlob(mediaBlobUrl);
+                  console.log(mediaBlobUrl)
+                  await getURL(mediaBlobUrl)
                 }}
               >
                 Stop Recording
@@ -108,6 +125,10 @@ function RecordView({ question }) {
             <p>{status}</p>
 
             <p>{mediaBlobUrl && mediaBlobUrl}</p>
+            
+            {console.log(mediaBlobUrl)}
+            {}
+        
 
             {mediaBlobUrl && status !== "recording" && (
               <video src={mediaBlobUrl} controls autoPlay loop />
