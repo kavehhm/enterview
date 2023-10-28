@@ -1,4 +1,5 @@
 import Camera from "@/components/Camera";
+import RecordView from "@/components/RecordView";
 import { useAppContext } from "@/Context";
 import { useRouter } from "next/router";
 import React from "react";
@@ -26,8 +27,8 @@ const Step3 = ({}) => {
         </button>
       </div>
       </div>
-      <div className="absolute left-0 bottom-20">
-        <Camera />
+      <div className=" left-0 bottom-20">
+        <RecordView />
       </div>
     </div>
   );
