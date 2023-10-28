@@ -2,6 +2,7 @@ import { useAppContext } from "@/Context";
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useReactMediaRecorder } from "react-media-recorder";
+import axios from "axios";
 
 const VideoPreview = ({ stream }) => {
   const videoRef = useRef(null);
@@ -64,7 +65,7 @@ function RecordView({ question }) {
   // ...
 
   const [blob, setBlob] = useState();
-  const [file, setFile] = useState();
+  const [fileMp4, setFile] = useState();
 
   //   const getURL = async (blobUrl) => {
   //     const response = await fetch(blobUrl);
@@ -80,6 +81,28 @@ function RecordView({ question }) {
       type: theBlob.type,
     });
   };
+
+  const getJobId=()=>{
+
+    const options = {
+      method: 'POST',
+      url: 'https://api.hume.ai/v0/batch/jobs',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
+        'X-Hume-Api-Key': 'Cke3dXgz9D86Mx7cKeylLChRm2nOtbYLcUKyOXjpx8t06lGn'
+      },
+      data: fileMp4};
+    
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
 
   const {
     status,
@@ -98,20 +121,22 @@ function RecordView({ question }) {
       console.log("blob", blob);
       console.log("file", file);
       clearBlobUrl();
+      setFile(file);
     },
   });
 
   const videoRef = useRef(null);
 
-  useEffect(() => {
-    console.log(blob);
-  }, [blob]);
+  // useEffect(() => {
+  //   console.log(blob);
+  // }, [blob]);
 
-  useEffect(() => {
-    setFile(new File([blob], "myFile.mp4", { type: "video/mp4" }));
-  }, [blob]);
+  // useEffect(() => {
+    
+  //   setFile(new File([blob], "myFile.mp4", { type: "video/mp4" }));
+  // }, [blob]);
 
-  console.log(blob);
+  // console.log(blob);
 
   return (
     <>
@@ -121,6 +146,7 @@ function RecordView({ question }) {
         <p>{status}</p>
         <button onClick={startRecording}>Start Recording</button>
         <button onClick={stopRecording}>Stop Recording</button>
+        <button onClick={getJobId}>GetJobID</button>
         <video src={mediaBlobUrl} controls autoPlay loop />
 
         {mediaBlobUrl && status !== "recording" && (
