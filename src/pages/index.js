@@ -6,11 +6,12 @@ import { LoaderIcon } from "react-hot-toast";
 import Camera from "@/components/Camera";
 import Step2 from "@/components/Step2";
 import Step3 from "@/components/Step3";
+import { useAppContext } from "@/Context";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [step, setStep] = useState(1);
+  const {step, setStep} = useAppContext()
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
 
