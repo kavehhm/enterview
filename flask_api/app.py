@@ -93,7 +93,7 @@ def index():
 
     job = client.submit_job([], [burst_config, face_config], files=files)
 
-    print("Running...", job)
+    # print("Running...", job)
     job.await_complete()
     predictions = job.get_predictions()
     
