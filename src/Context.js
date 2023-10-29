@@ -11,6 +11,7 @@ export function AppProvider({ children }) {
   const [videos, setVideos] = useState([])
   const [questions, setQuestions] = useState(["placeholder1", "placeholder2", "placeholder3"])
   const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState("")
 
   // Define functions that modify globalState here
 
@@ -25,7 +26,10 @@ export function AppProvider({ children }) {
     questions,
     setQuestions,
     loading,
-    setLoading
+    setLoading,
+    results,
+    setResults
+
 
 
     // Add your functions here

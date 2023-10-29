@@ -134,7 +134,8 @@ formData.append("file", fileMp4);
       .then(function (response) {
         toast.success("We got your data");
         setLoading(false);
-        console.log(response.data);
+        console.log(response.data)
+        // console.log(response.data[0]["results"]["predictions"][0]["models"]["face"]["grouped_predictions"][0]["predictions"]);
       })
       .catch(function (error) {
         toast.error("We did not get your data");

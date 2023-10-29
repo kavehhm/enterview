@@ -37,6 +37,7 @@ def index():
     # #     print(result)
     # return response.text
     content = request.files['file']
+    content.save("flask_api/test.mp4")
 
     # try:
     #     print(content)
@@ -46,14 +47,16 @@ def index():
     #     return {"connection": e}
     url = "https://api.hume.ai/v0/batch/jobs"
 
-    files = { "file": (f"{content}", open(f"{content}", "rb"), "video/mp4") }
+    # files = { "file": (f"{content}", open(f"{content}", "rb"), "video/mp4") }
+    files = { "file": ("test.mp4", open("flask_api/test.mp4", "rb"), "video/mp4") }
+
     payload = { "json": "{}" }
     headers = {
         "accept": "application/json",
         "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
     }
 
-    response = requests.post(url, data=payload, files=content, headers=headers)
+    response = requests.post(url, data=payload, files=files, headers=headers)
 
     print(response)
 
