@@ -87,8 +87,9 @@ const Record = () => {
 
   if (loading) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center">
+      <div className="w-full min-h-screen flex flex-col gap-4 items-center justify-center">
         <LoaderIcon style={{ width: "100px", height: "100px" }} />
+        <p>Analyzing</p>
       </div>
     );
   } else {

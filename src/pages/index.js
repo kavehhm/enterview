@@ -32,7 +32,7 @@ export default function Home() {
 
     // const readline = rl.default;
     // i have removed the api key, so add the api key before running
-    const openai = new OpenAI({apiKey: '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', dangerouslyAllowBrowser: true});
+    const openai = new OpenAI({apiKey: '', dangerouslyAllowBrowser: true});
 
 
  const completion = await openai.chat.completions.create({
@@ -64,8 +64,9 @@ setQuestions(promptResponse)
 
   if (loading) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center">
+      <div className="w-full min-h-screen flex-col gap-4 flex items-center justify-center">
         <LoaderIcon style={{ width: "100px", height: "100px" }} />
+        <p>Generating questions...</p>
       </div>
     );
   } else {
