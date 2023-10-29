@@ -103,6 +103,9 @@ function RecordView({ question }) {
   const getJobId = () => {
     setLoading(true);
 
+    const formData = new FormData();
+formData.append("file", fileMp4);
+
     const options = {
       method: "POST",
       url: "https://api.hume.ai/v0/batch/jobs",
@@ -119,10 +122,11 @@ function RecordView({ question }) {
       method: "POST",
       url: "http://127.0.0.1:5000/",
       headers: {
-        accept: "application/json",
+        'Content-Type': 'multipart/form-data',
       },
+      
 
-      data: {blob: mediaBlobUrl},
+      data: formData,
     };
 
     axios

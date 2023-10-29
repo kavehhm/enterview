@@ -4,13 +4,15 @@ from hume.models.config import LanguageConfig
 from hume.models.config import FaceConfig
 import requests
 import json
-from flask_cors import CORS
+from flask_cors import CORS,cross_origin
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app)
 
 @app.route('/', methods=["GET", "POST"])
-async def index():
+@cross_origin()
+def index():
     # import requests
 
     # url = "https://api.hume.ai/v0/batch/jobs"
@@ -35,6 +37,7 @@ async def index():
     # #     print(result)
     # return response.text
     content = request.files['file']
+
     # try:
     #     print(content)
     #     return {"content" : content.filename}
@@ -50,7 +53,7 @@ async def index():
         "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
     }
 
-    response = requests.post(url, data=payload, files=files, headers=headers)
+    response = requests.post(url, data=payload, files=content, headers=headers)
 
     print(response)
 
@@ -114,4 +117,4 @@ def face():
         return {"connection": e}
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True,port=5000)
