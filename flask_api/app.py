@@ -34,18 +34,17 @@ async def index():
     # #     result = await socket.send_file("blob:http://localhost:3000/fa82b32d-6a8b-4ef6-8be7-56639235342d")
     # #     print(result)
     # return response.text
-    content = request.get_json()
+    content = request.files['file']
     try:
         print(content)
-        return {"content" : content}
+        return {"content" : content.filename}
     except Exception as e:
         print(e)
         return {"connection": e}
 
 @app.route("/face", methods=["GET", "POST"])
 def face():
-
-    blob = ""
+    
 
     url = "https://api.hume.ai/v0/batch/jobs"
 
