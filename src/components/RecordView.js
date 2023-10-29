@@ -67,9 +67,7 @@ function RecordView({ question }) {
 
   const [blob, setBlob] = useState();
   const [fileMp4, setFile] = useState();
-  const {loading, setLoading} = useAppContext()
-
-
+  const { loading, setLoading } = useAppContext();
 
   const blobToFile = (theBlob, fileName) => {
     return new File([theBlob], fileName, {
@@ -78,34 +76,44 @@ function RecordView({ question }) {
     });
   };
 
-  const getJobId=()=>{
-
-    setLoading(true)
-
+  const getJobId = () => {
+    setLoading(true);
 
     const options = {
-      method: 'POST',
-      url: 'https://api.hume.ai/v0/batch/jobs',
+      method: "POST",
+      url: "https://api.hume.ai/v0/batch/jobs",
       headers: {
-        accept: 'application/json',
-        'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
-        'X-Hume-Api-Key': 'Q5KiHFOAPgew62dwR3Y8zgmaaoK5wcE8gGhMmwwfhV2u1LQv'
+        accept: "application/json",
+        "content-type":
+          "multipart/form-data; boundary=---011000010111000001101001",
+        "X-Hume-Api-Key": "Q5KiHFOAPgew62dwR3Y8zgmaaoK5wcE8gGhMmwwfhV2u1LQv",
       },
-      data: fileMp4};
-    
+      data: fileMp4,
+    };
+
+    const localOptions = {
+      method: "POST",
+      url: "http://localhost:5000/",
+      headers: {
+        accept: "application/json",
+      },
+
+      data: fileMp4,
+    };
+
     axios
-      .request(options)
+      .request(localOptions)
       .then(function (response) {
         toast.success("We got your data");
-        setLoading(false)
+        setLoading(false);
         console.log(response.data);
       })
       .catch(function (error) {
         toast.error("We did not get your data");
-        setLoading(false)
+        setLoading(false);
         console.error(error);
       });
-  }
+  };
 
   const {
     status,
@@ -123,13 +131,12 @@ function RecordView({ question }) {
       const file = blobToFile(blob, "video.mp4");
       console.log("blob", blob);
       console.log("file", file);
-      clearBlobUrl();
+      //   clearBlobUrl();
       setFile(file);
     },
   });
 
   const videoRef = useRef(null);
-
 
   return (
     <>
@@ -140,7 +147,6 @@ function RecordView({ question }) {
         <button onClick={startRecording}>Start Recording</button>
         <button onClick={stopRecording}>Stop Recording</button>
         <button onClick={getJobId}>GetJobID</button>
-        <video src={mediaBlobUrl} controls autoPlay loop />
 
         {mediaBlobUrl && status !== "recording" && (
           <video src={mediaBlobUrl} controls autoPlay loop />
@@ -159,4 +165,3 @@ function RecordView({ question }) {
 }
 
 export default RecordView;
-
