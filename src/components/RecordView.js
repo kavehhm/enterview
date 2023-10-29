@@ -67,7 +67,7 @@ function RecordView({ question }) {
 
   const [blob, setBlob] = useState();
   const [fileMp4, setFile] = useState();
-  const { loading, setLoading } = useAppContext();
+  const { loading, setLoading, results, setResults } = useAppContext();
 
   const blobToFile = (theBlob, fileName) => {
     return new File([theBlob], fileName, {

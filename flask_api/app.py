@@ -56,11 +56,11 @@ def index():
         "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
     }
 
-    response = requests.post(url, data=payload, files=files, headers=headers)
+    response = json.loads((requests.post(url, data=payload, files=files, headers=headers)).text)
 
-    print(response)
+    print(response['job_id'])
 
-    url = "https://api.hume.ai/v0/batch/jobs/34705d25-1a4a-407c-9d4b-54aa50e827bc/predictions"
+    url = f"https://api.hume.ai/v0/batch/jobs/{response['job_id']}/predictions"
 
     
     headers = {
@@ -70,7 +70,7 @@ def index():
 
     response = requests.get(url, headers=headers)
 
-    print(response.text)
+    #print(response.text)
 
     response_dict = json.loads(response.text)
     #print (type(response))
