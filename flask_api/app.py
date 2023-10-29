@@ -163,13 +163,12 @@ def index():
     #prediction = predictions[0]['results']['predictions'][0]['models']['face']['grouped_predictions'][0]['predictions']
 
     stretches = find_stretches(predictions)
-    print("dcdcdc")
-    print(stretches)
+    print(predictions)
 
 
     
     try:
-        return {'stretches' : stretches}
+        return predictions
     except Exception as e:
         print(e)
         return {"connection": e}

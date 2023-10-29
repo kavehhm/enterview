@@ -63,14 +63,16 @@ const Record = () => {
       .request(localOptions)
       .then(function (response) {
         toast.success("We got your data");
-        setLoading(false);
-        const data =
-          response.data[0]["results"]["predictions"][0]["models"]["face"][
-            "grouped_predictions"
-          ][0]["predictions"]
-          console.log(response)
+        setLoading(false);       
+         console.log(response.data);
+
+        // const data =
+        //   response.data[0]["results"]["predictions"][0]["models"]["face"][
+        //     "grouped_predictions"
+        //   ][0]["predictions"];
         // console.log(response.data);
-        console.log(data);
+
+        console.log(response.data)
         const predictions = response.data[0]["results"]["predictions"][0]["models"]["face"][
           "grouped_predictions"
         ][0]["predictions"];

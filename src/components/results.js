@@ -1,5 +1,7 @@
 import { useAppContext } from "@/Context";
 import React, { useEffect, useState } from "react";
+import { OpenAI } from "openai";
+
 
 function getTop5Objects(inputArray) {
   // Sort the input array in descending order of scores
@@ -14,9 +16,12 @@ function getTop5Objects(inputArray) {
 export default function Results() {
   const { results } = useAppContext();
 
+  const [feedback, setFeedback] = useState("Loading feedback")
+
   console.log(results)
   const [topFive, setTopFive] = useState([]);
-  useEffect(() => {
+  useEffect( () => {
+
     const emotionSums = {};  // Sum of scores for each emotion
     const emotionCounts = {};  // Number of occurrences for each emotion
 
@@ -52,7 +57,39 @@ export default function Results() {
 
     
     setTopFive(sortedEmotions);
-  }, [results]);
+    console.log(sortedEmotions)
+  
+
+    
+
+  }, [results])
+
+  useEffect(()=> {
+
+    const handleSubmit = async () => {
+    const prompt = `this is the result given by a tool that detects emotion during a interview 
+        '''${topFive}'''
+    now analyse the data and give useful tips or feedback for the user to improve. I strictly want the feedback only no extra info and no data that i provided.
+    
+    output the text in single para in 100 words`
+    
+    console.log(prompt)
+
+    // const readline = rl.default;
+    // i have removed the api key, so add the api key before running
+    const openai = new OpenAI({apiKey: '', dangerouslyAllowBrowser: true});
+
+
+ const completion = await openai.chat.completions.create({
+    model:"gpt-3.5-turbo",
+    messages:[{role:"user", content:prompt}]
+})
+const promptResponse = completion.choices[0].message.content;
+setFeedback(promptResponse)}
+handleSubmit()
+  }, [topFive])
+
+  
 
   // Example usage:
 
@@ -78,6 +115,7 @@ export default function Results() {
           </div>
         ))}
       </div>
+      <p>{feedback}</p>
     </div>
   );
 }
