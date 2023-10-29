@@ -7,7 +7,7 @@ import json
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 @app.route('/', methods=["GET", "POST"])
 async def index():
