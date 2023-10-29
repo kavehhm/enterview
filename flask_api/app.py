@@ -49,53 +49,56 @@ def index():
     url = "https://api.hume.ai/v0/batch/jobs"
 
     # files = { "file": (f"{content}", open(f"{content}", "rb"), "video/mp4") }
-    files = { "file": ("test.mp4", open("flask_api/test.mp4", "rb"), "video/mp4") }
+    # files = { "file": ("test.mp4", open("flask_api/test.mp4", "rb"), "video/mp4") }
 
-    payload = { "json": "{}" }
-    headers = {
-        "accept": "application/json",
-        "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
-    }
+    # payload = { "json": "{}" }
+    # headers = {
+    #     "accept": "application/json",
+    #     "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
+    # }
 
-    response = json.loads((requests.post(url, data=payload, files=files, headers=headers)).text)
+    # response = json.loads((requests.post(url, data=payload, files=files, headers=headers)).text)
 
-    print(response['job_id'])
+    # print(response['job_id'])
 
-    url = f"https://api.hume.ai/v0/batch/jobs/{response['job_id']}/predictions"
+    # url = f"https://api.hume.ai/v0/batch/jobs/{response['job_id']}/predictions"
 
     
-    headers = {
-        "accept": "application/json; charset=utf-8",
-        "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
-    }
+    # headers = {
+    #     "accept": "application/json; charset=utf-8",
+    #     "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
+    # }
 
-    response = requests.get(url, headers=headers)
+    # response = json.loads((requests.get(url, headers=headers)).text)
 
-    response_dict = json.loads(response.text)
+    # print(type(response))
 
-    wait = response_dict['message']
-    while wait == 'Job is in progress.':
-        response = requests.get(url, headers=headers)
-        response_dict = json.loads(response.text)
-        wait = response_dict['message']
+    # # response_dict = json.loads(response.text)
+
+    # # print(response_dict)
+
+    
+    # while type(response) != type(["a", "b"]):
+    #     response = json.loads((requests.get(url, headers=headers)).text)
+    #     print(type(response))
 
     #print (type(response))
 
-    # client = HumeBatchClient("jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r", timeout=300)
+    client = HumeBatchClient("jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r", timeout=300)
 
-    # files = ["flask_api/test.mp4"]
-    # burst_config = BurstConfig()
-    # prosody_config = ProsodyConfig()
-    # face_config = FaceConfig()
+    files = ["flask_api/test.mp4"]
+    burst_config = BurstConfig()
+    prosody_config = ProsodyConfig()
+    face_config = FaceConfig()
 
-    # job = client.submit_job([], [burst_config, face_config], files=files)
+    job = client.submit_job([], [burst_config, face_config], files=files)
 
-    # print("Running...", job)
-    # job.await_complete()
-    # predictions = job.get_predictions()
+    print("Running...", job)
+    job.await_complete()
+    predictions = job.get_predictions()
     
     try:
-        return response_dict
+        return predictions
     except Exception as e:
         print(e)
         return {"connection": e}
