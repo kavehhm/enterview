@@ -15,6 +15,57 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 #CORS(app)
 
+def find_stretches(json_data):
+    print("entered")
+    stretches = []
+    current_stretch = []
+    last_dominant = None
+
+    predictions = json_data[0]['results']['predictions'][0]['models']['face']['grouped_predictions'][0]['predictions']
+    for pred in predictions:
+        time = pred['time']
+        dominant_emotions = find_dominant_emotions(pred['emotions'])
+
+        if last_dominant is None:
+            last_dominant = dominant_emotions
+            current_stretch.append((time, dominant_emotions))
+        else:
+            common_emotions = last_dominant.intersection(dominant_emotions)
+            if common_emotions:
+                current_stretch.append((time, dominant_emotions))
+                last_dominant = common_emotions
+            else:
+                if len(current_stretch) >= 5:
+                    print("ebtered len")
+                    stretches.append({
+                        'emotions': list(last_dominant),
+                        'first_time': current_stretch[0][0],
+                        'last_time': current_stretch[-1][0],
+                        'length': current_stretch[-1][0] - current_stretch[0][0]
+                    })
+                current_stretch = [(time, dominant_emotions)]
+                print(current_stretch)
+                last_dominant = dominant_emotions
+
+    if len(current_stretch) >= 5:
+        stretches.append({
+            'emotions': list(last_dominant),
+            'first_frame': current_stretch[0][0],
+            'last_frame': current_stretch[-1][0],
+            'length': current_stretch[-1][0] - current_stretch[0][0]
+        })
+
+    return stretches
+
+def find_dominant_emotions(emotions):
+    # print("Debug: Emotions received:", emotions)  # Debugging line
+
+    emotions = sorted(emotions, key=lambda x: x.get('score', 0), reverse=True)
+    top_emotion_score = emotions[0].get('score')
+    print("top = " + str(top_emotion_score))
+    dominant_emotions = [e['name'] for e in emotions if e['score'] >= top_emotion_score - 0.02]
+    return set(dominant_emotions[:3])
+
 @app.route('/', methods=["GET", "POST"])
 @cross_origin()
 def index():
@@ -48,7 +99,7 @@ def index():
     try:
         command = 'ffmpeg -i flask_api/input.webm flask_api/test2.mp4 -y'
         subprocess.run(command)
-    except: 
+    except Exception as e: 
         print(e)
     
 
@@ -98,17 +149,24 @@ def index():
 
     client = HumeBatchClient("jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r", timeout=300)
 
-    files = ["flask_api/test.mp4"]
+    files = ["flask_api/test2.mp4"]
     burst_config = BurstConfig()
     prosody_config = ProsodyConfig()
     face_config = FaceConfig()
+    lang_config = LanguageConfig(granularity='conversational_turn')
 
     job = client.submit_job([], [burst_config, face_config], files=files)
 
     print("Running...", job)
     job.await_complete()
     predictions = job.get_predictions()
-    print(predictions)
+    #prediction = predictions[0]['results']['predictions'][0]['models']['face']['grouped_predictions'][0]['predictions']
+
+    stretches = find_stretches(predictions)
+    print("dcdcdc")
+    print(stretches)
+
+
     
     try:
         return predictions

@@ -67,9 +67,12 @@ const Record = () => {
         const data =
           response.data[0]["results"]["predictions"][0]["models"]["face"][
             "grouped_predictions"
-          ][0]["predictions"][0]["emotions"];
+          ][0]["predictions"]
+          console.log(response)
         // console.log(response.data);
         console.log(data);
+        // const predictions = response.data[0].results.predictions[0].models.face.grouped_predictions[0].predictions;
+
         setResults(data);
 
         setStep(3);
