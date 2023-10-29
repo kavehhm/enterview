@@ -107,7 +107,7 @@ function Camera({ question }) {
       {videos.length > 0 ? (
         <div>
           {videos.map((video) => (
-            <video controls width="480" height="360">
+            <video key={video} controls width="480" height="360">
               <source src={video} type="video/webm" />
               Your browser does not support the video tag.
             </video>
