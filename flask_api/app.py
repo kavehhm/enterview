@@ -4,8 +4,10 @@ from hume.models.config import LanguageConfig
 from hume.models.config import FaceConfig
 import requests
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=["GET", "POST"])
 async def index():
