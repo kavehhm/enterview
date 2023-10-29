@@ -31,10 +31,10 @@ const Record = () => {
   } = useReactMediaRecorder({
     video: true,
     blobPropertyBag: {
-      type: "video/mp4",
+      type: "video/webm",
     },
     onStop: async (blobUrl, blob) => {
-      const fileMp4 = blobToFile(blob, "video.mp4");
+      const fileMp4 = blobToFile(blob, "video.webm");
       console.log("blob", blob);
       console.log("blobURL", blobUrl);
       console.log("file", file);

@@ -32,7 +32,7 @@ export default function Home() {
 
     // const readline = rl.default;
     // i have removed the api key, so add the api key before running
-    const openai = new OpenAI({apiKey: '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', dangerouslyAllowBrowser: true});
+    const openai = new OpenAI({apiKey: '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', dangerouslyAllowBrowser: true});
 
 
  const completion = await openai.chat.completions.create({

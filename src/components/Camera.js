@@ -44,7 +44,7 @@ function Camera({ question }) {
 
       mediaRecorder.onstop = () => {
         // Move this code inside the onstop event
-        const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+        const recordedBlob = new Blob(recordedChunks, { type: "video/mp4" });
         setRecordedBlob(recordedBlob); // Set the recordedBlob
 
         // Create a video URL from the recordedBlob
@@ -108,7 +108,7 @@ function Camera({ question }) {
         <div>
           {videos.map((video) => (
             <video key={video} controls width="480" height="360">
-              <source src={video} type="video/webm" />
+              <source src={video} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ))}

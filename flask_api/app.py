@@ -7,6 +7,9 @@ from hume.models.config import ProsodyConfig
 import requests
 import json
 from flask_cors import CORS,cross_origin
+import imageio_ffmpeg as ffmpeg
+import os
+import subprocess
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -37,8 +40,17 @@ def index():
     #     result = await socket.send_file("blob:http://localhost:3000/fa82b32d-6a8b-4ef6-8be7-56639235342d")
     #     print(result)
     # return response.text
+
     content = request.files['file']
-    content.save("flask_api/test.mp4")
+    print(content.content_type)
+    content.save("flask_api/input.webm")
+
+    try:
+        command = 'ffmpeg -i flask_api/input.webm flask_api/test2.mp4 -y'
+        subprocess.run(command)
+    except: 
+        print(e)
+    
 
     # try:
     #     print(content)
@@ -93,9 +105,10 @@ def index():
 
     job = client.submit_job([], [burst_config, face_config], files=files)
 
-    # print("Running...", job)
+    print("Running...", job)
     job.await_complete()
     predictions = job.get_predictions()
+    print(predictions)
     
     try:
         return predictions
