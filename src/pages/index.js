@@ -23,6 +23,8 @@ export default function Home() {
       `You're playing the role of an interviewer at ${job} and you're interviewing a person applying as a ${role} `
     );
 
+
+
     setLoading(false);
     setStep(2);
   };

@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }) {
     <AppProvider>
       <div className="p-10">
         <Toaster />
-        <p className="font-bold">
+        <p className="font-bold text-xl">
           enter
           <span className="text-blue-600">view</span>
         </p>

@@ -1,9 +1,7 @@
 import { AppProvider, useAppContext } from "@/Context";
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { useReactMediaRecorder } from "react-media-recorder";
-import axios from "axios";
-import toast from "react-hot-toast";
+
 
 const VideoPreview = ({ stream }) => {
   const videoRef = useRef(null);
@@ -61,88 +59,25 @@ const ReactMediaRecorder = dynamic(
   }
 );
 
-function RecordView({ question }) {
+function RecordView({
+  status,
+  startRecording,
+  stopRecording,
+  previewStream,
+  mediaBlobUrl,
+  file,
+  getJobId,
+  clearBlobUrl,
+}) {
   // Your component code remains mostly the same
   // ...
 
   const [blob, setBlob] = useState();
-  const [fileMp4, setFile] = useState();
   const { loading, setLoading, results, setResults } = useAppContext();
 
-  const blobToFile = (theBlob, fileName) => {
-    return new File([theBlob], fileName, {
-      lastModified: new Date().getTime(),
-      type: theBlob.type,
-    });
-  };
 
- 
 
-  const {
-    status,
-    startRecording,
-    stopRecording,
-    previewStream,
-    mediaBlobUrl,
-    clearBlobUrl,
-  } = useReactMediaRecorder({
-    video: true,
-    blobPropertyBag: {
-      type: "video/mp4",
-    },
-    onStop: async (blobUrl, blob) => {
-      const file = blobToFile(blob, "video.mp4");
-      console.log("blob", blob);
-      console.log("blobURL", blobUrl)
-      console.log("file", file);
-      //   clearBlobUrl();
-      setFile(file);
-    },
-  });
-
-  const getJobId = () => {
-    setLoading(true);
-
-    const formData = new FormData();
-formData.append("file", fileMp4);
-
-    const options = {
-      method: "POST",
-      url: "https://api.hume.ai/v0/batch/jobs",
-      headers: {
-        accept: "application/json",
-        "content-type":
-          "multipart/form-data; boundary=---011000010111000001101001",
-        "X-Hume-Api-Key": "Q5KiHFOAPgew62dwR3Y8zgmaaoK5wcE8gGhMmwwfhV2u1LQv",
-      },
-      data: fileMp4,
-    };
-
-    const localOptions = {
-      method: "POST",
-      url: "http://127.0.0.1:5000/",
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      
-
-      data: formData,
-    };
-
-    axios
-      .request(localOptions)
-      .then(function (response) {
-        toast.success("We got your data");
-        setLoading(false);
-        console.log(response.data)
-        // console.log(response.data[0]["results"]["predictions"][0]["models"]["face"]["grouped_predictions"][0]["predictions"]);
-      })
-      .catch(function (error) {
-        toast.error("We did not get your data");
-        setLoading(false);
-        console.error(error);
-      });
-  };
+  
 
   const videoRef = useRef(null);
 
@@ -151,22 +86,27 @@ formData.append("file", fileMp4);
       <div className="rounded-lg flex items-center justify-center gap-5"></div>
 
       <div>
+        <div className="flex gap-3">
         <p>{status}</p>
         <button onClick={startRecording}>Start Recording</button>
         <button onClick={stopRecording}>Stop Recording</button>
-        <button onClick={getJobId}>GetJobID</button>
+        </div>
 
-        {mediaBlobUrl && status !== "recording" && (
-          <video src={mediaBlobUrl} controls autoPlay loop />
-        )}
+        <div className="w-[10rem]">
+          {file && status !== "recording" && (
+            <button className="bg-green-600 cursor-auto p-4 text-white">
+                Your video interview is ready! Click start recording to restart.
+            </button>
+          )}
 
-        {status === "recording" && (
-          <div className="h-6 w-6 bg-red-500 rounded-full animate-pulse"></div>
-        )}
+          {status === "recording" && (
+            <div className="h-6 w-6 bg-red-500 rounded-full animate-pulse"></div>
+          )}
 
-        {status === "recording" && <VideoPreview stream={previewStream} />}
+          {status === "recording" && <VideoPreview stream={previewStream} />}
 
-        {status === "idle" && <Camera />}
+          {status === "idle" && <Camera />}
+        </div>
       </div>
     </>
   );
