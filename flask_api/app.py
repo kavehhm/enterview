@@ -8,7 +8,7 @@ import requests
 import json
 from flask_cors import CORS,cross_origin
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 #CORS(app)
 
@@ -141,5 +141,5 @@ def face():
         print(e)
         return {"connection": e}
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     app.run(debug=True,port=5000)
