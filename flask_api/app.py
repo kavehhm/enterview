@@ -3,6 +3,7 @@ from hume import HumeStreamClient
 from hume.models.config import LanguageConfig
 from hume.models.config import FaceConfig
 import requests
+import json
 
 app = Flask(__name__)
 
@@ -41,7 +42,6 @@ async def index():
 
 @app.route("/face", methods=["GET", "POST"])
 def face():
-    content = request.get_json()
 
     url = "https://api.hume.ai/v0/batch/jobs"
 
@@ -54,20 +54,25 @@ def face():
 
     response = requests.post(url, data=payload, files=files, headers=headers)
 
-    import requests
+    print(response)
 
-    url = "https://api.hume.ai/v0/batch/jobs/id/predictions"
+    url = "https://api.hume.ai/v0/batch/jobs/34705d25-1a4a-407c-9d4b-54aa50e827bc/predictions"
 
-    headers = {"accept": "application/json; charset=utf-8"}
+    
+    headers = {
+        "accept": "application/json; charset=utf-8",
+        "X-Hume-Api-Key": "jsmfWNtGidQg4kV9Y6AyP7kw0V5AzGp8vLxApbGbzDFawM7r"
+    }
 
     response = requests.get(url, headers=headers)
 
     print(response.text)
 
-    print(response.text)
+    response_dict = json.loads(response.text)
+    #print (type(response))
+    
     try:
-        print(content)
-        return {"content" : content}
+        return response_dict
     except Exception as e:
         print(e)
         return {"connection": e}
