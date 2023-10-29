@@ -1,5 +1,6 @@
 import { AppProvider } from "@/Context";
 import "@/styles/globals.css";
+import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }) {
@@ -9,10 +10,10 @@ export default function App({ Component, pageProps }) {
     <AppProvider>
       <div className="p-10">
         <Toaster />
-        <p className="font-bold text-xl">
+        <Link href={''} className="font-bold text-xl">
           enter
           <span className="text-blue-600">view</span>
-        </p>
+        </Link>
 
         <Component {...pageProps} />
       </div>

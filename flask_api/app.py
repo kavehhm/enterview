@@ -93,7 +93,7 @@ def index():
 
     job = client.submit_job([], [burst_config, face_config], files=files)
 
-    print("Running...", job)
+    # print("Running...", job)
     job.await_complete()
     predictions = job.get_predictions()
     
@@ -141,5 +141,5 @@ def face():
         print(e)
         return {"connection": e}
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     app.run(debug=True,port=5000)

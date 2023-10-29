@@ -8,8 +8,9 @@ import { useReactMediaRecorder } from "react-media-recorder";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const Step3 = () => {
-  const { questions, loading, setLoading } = useAppContext();
+const Record = () => {
+  const { questions, loading, setLoading, setResults, setStep } =
+    useAppContext();
   const [question, setQuestion] = useState(0);
   const [file, setFile] = useState(null);
 
@@ -63,8 +64,15 @@ const Step3 = () => {
       .then(function (response) {
         toast.success("We got your data");
         setLoading(false);
-        console.log(response.data);
-        // console.log(response.data[0]["results"]["predictions"][0]["models"]["face"]["grouped_predictions"][0]["predictions"]);
+        const data =
+          response.data[0]["results"]["predictions"][0]["models"]["face"][
+            "grouped_predictions"
+          ][0]["predictions"][0]["emotions"];
+        // console.log(response.data);
+        console.log(data);
+        setResults(data);
+
+        setStep(3);
       })
       .catch(function (error) {
         toast.error("We did not get your data");
@@ -82,8 +90,10 @@ const Step3 = () => {
   } else {
     return (
       <div className="relative flex  justify-center w-full min-h-[80vh]">
-        <div className="flex gap-5 z-50 flex-col">
-          <p className="text-center font-bold text-2xl">{question + 1}</p>
+        <div className="flex w-4/5 md:w-3/5  lg:w-1/2 gap-5 z-50 flex-col">
+          <p className="text-center font-bold text-2xl">
+            {questions[question]}
+          </p>
           <div className="flex gap-5 z-50 flex-col">
             <button
               disabled={question === questions.length - 1}
@@ -127,4 +137,4 @@ const Step3 = () => {
   }
 };
 
-export default Step3;
+export default Record;
