@@ -44,11 +44,11 @@ async def index():
 
 @app.route("/face", methods=["GET", "POST"])
 def face():
-    
+    content = request.files['file']
 
     url = "https://api.hume.ai/v0/batch/jobs"
 
-    files = { "file": ("flask_api\\WIN_20231028_11_07_20_Pro.mp4", open("flask_api\\WIN_20231028_11_07_20_Pro.mp4", "rb"), "video/mp4") }
+    files = { "file": (f"{content}", open(f"{content}", "rb"), "video/mp4") }
     payload = { "json": "{}" }
     headers = {
         "accept": "application/json",
