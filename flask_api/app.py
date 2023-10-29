@@ -169,7 +169,7 @@ def index():
 
     
     try:
-        return predictions
+        return {'stretches' : stretches}
     except Exception as e:
         print(e)
         return {"connection": e}

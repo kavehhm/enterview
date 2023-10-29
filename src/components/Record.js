@@ -65,9 +65,10 @@ const Record = () => {
         toast.success("We got your data");
         setLoading(false);
         const data =
-          response.data[0]["results"]["predictions"][0]["models"]["face"][
-            "grouped_predictions"
-          ][0]["predictions"]
+        response.data
+          // response.data[0]["results"]["predictions"][0]["models"]["face"][
+          //   "grouped_predictions"
+          // ][0]["predictions"]
           console.log(response)
         // console.log(response.data);
         console.log(data);
