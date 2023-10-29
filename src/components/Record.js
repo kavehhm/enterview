@@ -72,9 +72,9 @@ const Record = () => {
           console.log(response)
         // console.log(response.data);
         console.log(data);
-        // const predictions = response.data[0].results.predictions[0].models.face.grouped_predictions[0].predictions;
+        const predictions = response.data[0].results.predictions[0].models.face.grouped_predictions[0].predictions;
 
-        setResults(data);
+        setResults(predictions);
 
         setStep(3);
       })
