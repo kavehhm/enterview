@@ -76,6 +76,30 @@ function RecordView({ question }) {
     });
   };
 
+ 
+
+  const {
+    status,
+    startRecording,
+    stopRecording,
+    previewStream,
+    mediaBlobUrl,
+    clearBlobUrl,
+  } = useReactMediaRecorder({
+    video: true,
+    blobPropertyBag: {
+      type: "video/mp4",
+    },
+    onStop: async (blobUrl, blob) => {
+      const file = blobToFile(blob, "video.mp4");
+      console.log("blob", blob);
+      console.log("blobURL", blobUrl)
+      console.log("file", file);
+      //   clearBlobUrl();
+      setFile(file);
+    },
+  });
+
   const getJobId = () => {
     setLoading(true);
 
@@ -98,7 +122,7 @@ function RecordView({ question }) {
         accept: "application/json",
       },
 
-      data: {item: 'test'},
+      data: {blob: mediaBlobUrl},
     };
 
     axios
@@ -114,27 +138,6 @@ function RecordView({ question }) {
         console.error(error);
       });
   };
-
-  const {
-    status,
-    startRecording,
-    stopRecording,
-    previewStream,
-    mediaBlobUrl,
-    clearBlobUrl,
-  } = useReactMediaRecorder({
-    video: true,
-    blobPropertyBag: {
-      type: "video/mp4",
-    },
-    onStop: async (blobUrl, blob) => {
-      const file = blobToFile(blob, "video.mp4");
-      console.log("blob", blob);
-      console.log("file", file);
-      //   clearBlobUrl();
-      setFile(file);
-    },
-  });
 
   const videoRef = useRef(null);
 
